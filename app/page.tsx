@@ -48,14 +48,14 @@ export default function FileUploadAndChat() {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="flex p-4 flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0"
     >
       <motion.div
-        initial={{ x: -50, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
         className="w-full md:w-2/3 space-y-4"
       >
@@ -75,8 +75,8 @@ export default function FileUploadAndChat() {
         </AnimatePresence>
       </motion.div>
       <motion.div
-        initial={{ x: 50, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.5 }}
         className="w-full md:w-1/3"
       >
