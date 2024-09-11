@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { AnimatePresence, motion } from "framer-motion"
 
 interface ChatCardProps {
   chatMessages: string[]
@@ -19,9 +20,20 @@ export default function ChatCard({ chatMessages, newMessage, setNewMessage, onSe
       </CardHeader>
       <CardContent className="flex-grow flex flex-col">
         <ScrollArea className="flex-grow w-full rounded-md border p-4 mb-4">
-          {chatMessages.map((message, index) => (
-            <div key={index} className="mb-2">{message}</div>
-          ))}
+          <AnimatePresence>
+            {chatMessages.map((message, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="mb-2"
+              >
+                {message}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </ScrollArea>
         <div className="flex space-x-2">
           <Input

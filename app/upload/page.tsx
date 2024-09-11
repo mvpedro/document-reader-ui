@@ -1,7 +1,8 @@
 "use client"
 
-import { useToast } from "@/hooks/use-toast"
 import { useCallback, useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { useToast } from "@/hooks/use-toast"
 import FileUploadArea from "./file-upload-area"
 import OptionsAndExecute from "./options-and-execute"
 import ApiResultCard from "./api-result-card"
@@ -46,24 +47,46 @@ export default function FileUploadAndChat() {
   }
 
   return (
-    <div className="container mx-auto p-4 flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
-      <div className="w-full md:w-2/3 space-y-4">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="flex p-4 flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0"
+    >
+      <motion.div
+        initial={{ x: -50, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="w-full md:w-2/3 space-y-4"
+      >
         <FileUploadArea file={file} onFileUpload={handleFileUpload} onFileDelete={handleFileDelete} />
-        {file && (
-          <>
-            <OptionsAndExecute option={option} setOption={setOption} onExecute={handleExecute} />
-            <ApiResultCard apiResult={apiResult} />
-          </>
-        )}
-      </div>
-      <div className="w-full md:w-1/3">
+        <AnimatePresence>
+          {file && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <OptionsAndExecute option={option} setOption={setOption} onExecute={handleExecute} />
+              <ApiResultCard apiResult={apiResult} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+      <motion.div
+        initial={{ x: 50, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+        className="w-full md:w-1/3"
+      >
         <ChatCard
           chatMessages={chatMessages}
           newMessage={newMessage}
           setNewMessage={setNewMessage}
           onSendMessage={handleSendMessage}
         />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }
