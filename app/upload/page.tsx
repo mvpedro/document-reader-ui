@@ -1,128 +1,116 @@
 "use client"
 
-import { useCallback, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState } from 'react'
 import { useToast } from "@/hooks/use-toast"
-import FileUploadArea from "./file-upload-area"
-import OptionsAndExecute from "./options-and-execute"
-import ApiResultCard from "./api-result-card"
-import ChatCard from "./chat-card"
+import FileUploadArea from './file-upload-area'
+import OptionsAndExecute from './options-and-execute'
+import ApiResultCard from './api-result-card'
+import ChatCard from './chat-card'
+
+type ChatMessage = {
+  text: string;
+  sender: 'user' | 'ai';
+};
 
 export default function FileUploadAndChat() {
   const [file, setFile] = useState<File | null>(null)
   const [option, setOption] = useState<string>("")
+  const [embedId, setEmbedId] = useState<string | null>(null)
   const [apiResult, setApiResult] = useState<string>("")
-  const [chatMessages, setChatMessages] = useState<string[]>([])
+  const [hasApiResponse, setHasApiResponse] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState<string>("")
   const { toast } = useToast()
 
-  const handleFileUpload = useCallback((selectedFile: File) => {
+  const handleFileUpload = (selectedFile: File) => {
+    setFile(selectedFile)
     toast({
-      title: "Uploading file...",
-      description: "Please wait while we process your file.",
+      title: "Arquivo carregado",
+      description: `${selectedFile.name} foi carregado com sucesso.`,
     })
-    setTimeout(() => {
-      setFile(selectedFile)
-      toast({
-        title: "File uploaded successfully",
-        description: `${selectedFile.name} has been uploaded.`,
-        variant: "default",
-      })
-    }, 2000)
-  }, [toast])
+  }
 
-  const handleFileDelete = useCallback(() => {
+  const handleFileDelete = () => {
     setFile(null)
-  }, [])
+  }
 
   const handleExecute = async () => {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append('file', file);
+    formData.append('option', option);
 
     try {
-      let response;
-      if (process.env.NODE_ENV === 'production') {
-        response = await fetch(
-          "https://flask-b-bd804e71c25f.herokuapp.com/api/upload",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-      } else {
-        response = await fetch("/api/mock-upload", {
-          method: "POST",
-          body: formData,
-        });
-      }
-
-      if (!response.ok) {
-        throw new Error('API request failed');
-      }
-
+      setIsLoading(true);
+      const response = await fetch('/api/mock-upload', {
+        method: 'POST',
+        body: formData,
+      });
       const data = await response.json();
       setApiResult(data.text);
+      setHasApiResponse(true);  // Set this to true when we get a response
+      setIsLoading(false);
     } catch (error) {
       console.error('Error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to process the file. Please try again.",
-        variant: "destructive",
-      });
+      setIsLoading(false);
     }
-  }
+  };
 
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      setChatMessages([...chatMessages, newMessage])
-      setNewMessage("")
+  const handleSendMessage = async () => {
+    if (newMessage.trim() && embedId) {
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: newMessage,
+            embedId: embedId,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to send message')
+        }
+
+        const data = await response.json()
+        setChatMessages([...chatMessages, { text: newMessage, sender: 'user' }, { text: data.response, sender: 'ai' }])
+        setNewMessage("")
+      } catch (error) {
+        console.error('Error sending message:', error)
+        toast({
+          title: "Erro",
+          description: "Falha ao enviar mensagem. Por favor, tente novamente.",
+          variant: "destructive",
+        })
+      }
     }
   }
 
   return (
-
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="flex p-4 flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0"
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-        className="w-full md:w-2/3 space-y-4"
-      >
-        <FileUploadArea file={file} onFileUpload={handleFileUpload} onFileDelete={handleFileDelete} />
-        <AnimatePresence>
-          {file && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <OptionsAndExecute option={option} setOption={setOption} onExecute={handleExecute} />
-              <ApiResultCard apiResult={apiResult} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4, duration: 0.5 }}
-        className="w-full md:w-1/3"
-      >
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="space-y-8">
+          <FileUploadArea file={file} onFileUpload={handleFileUpload} onFileDelete={handleFileDelete} />
+          <OptionsAndExecute
+            option={option}
+            setOption={setOption}
+            onExecute={handleExecute}
+            isExecuteDisabled={!file || !option}
+          />
+          <ApiResultCard apiResult={apiResult} />
+        </div>
         <ChatCard
           chatMessages={chatMessages}
           newMessage={newMessage}
           setNewMessage={setNewMessage}
           onSendMessage={handleSendMessage}
+          isDisabled={!embedId}
         />
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   )
 }

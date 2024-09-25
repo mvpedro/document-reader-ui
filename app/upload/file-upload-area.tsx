@@ -14,15 +14,24 @@ export default function FileUploadArea({ file, onFileUpload, onFileDelete }: Fil
 
   const handleFileDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
-    onFileUpload(e.dataTransfer.files[0])
+    const file = e.dataTransfer.files[0]
+    if (file && file.type === "application/pdf") {
+      onFileUpload(file)
+    } else {
+      alert("Por favor, selecione apenas arquivos PDF.")
+    }
   }, [onFileUpload])
 
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      onFileUpload(e.target.files[0])
+      const file = e.target.files[0]
+      if (file.type === "application/pdf") {
+        onFileUpload(file)
+      } else {
+        alert("Por favor, selecione apenas arquivos PDF.")
+      }
     }
   }, [onFileUpload])
-
   const handleClick = useCallback(() => {
     fileInputRef.current?.click()
   }, [])
@@ -38,11 +47,12 @@ export default function FileUploadArea({ file, onFileUpload, onFileDelete }: Fil
             className="flex flex-col items-center justify-center h-40 cursor-pointer"
           >
             <Upload className="w-12 h-12 text-muted-foreground mb-2" />
-            <p className="text-muted-foreground">Arraste e solte um arquivo aqui ou clique para selecionar</p>
+            <p className="text-muted-foreground">Arraste e solte um arquivo PDF aqui ou clique para selecionar</p>
             <input
               type="file"
               ref={fileInputRef}
               onChange={handleFileSelect}
+              accept=".pdf"
               className="hidden"
             />
           </div>

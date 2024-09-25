@@ -5,14 +5,20 @@ import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { AnimatePresence, motion } from "framer-motion"
 
+interface ChatMessage {
+  text: string
+  sender: 'user' | 'ai'
+}
+
 interface ChatCardProps {
-  chatMessages: string[]
+  chatMessages: ChatMessage[]
   newMessage: string
   setNewMessage: (value: string) => void
   onSendMessage: () => void
+  isDisabled: boolean
 }
 
-export default function ChatCard({ chatMessages, newMessage, setNewMessage, onSendMessage }: ChatCardProps) {
+export default function ChatCard({ chatMessages, newMessage, setNewMessage, onSendMessage, isDisabled }: ChatCardProps) {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
@@ -28,9 +34,11 @@ export default function ChatCard({ chatMessages, newMessage, setNewMessage, onSe
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="mb-2"
+                className={`mb-2 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}
               >
-                {message}
+                <span className={`inline-block p-2 rounded-lg ${message.sender === 'user' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+                  {message.text}
+                </span>
               </motion.div>
             ))}
           </AnimatePresence>
@@ -40,9 +48,10 @@ export default function ChatCard({ chatMessages, newMessage, setNewMessage, onSe
             placeholder="Escreva sua mensagem..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && onSendMessage()}
+            onKeyPress={(e) => e.key === 'Enter' && !isDisabled && onSendMessage()}
+            disabled={isDisabled}
           />
-          <Button onClick={onSendMessage}>
+          <Button onClick={onSendMessage} disabled={isDisabled}>
             <Send className="h-4 w-4" />
           </Button>
         </div>

@@ -7,9 +7,10 @@ interface OptionsAndExecuteProps {
   option: string
   setOption: (value: string) => void
   onExecute: () => void
+  isExecuteDisabled: boolean
 }
 
-export default function OptionsAndExecute({ option, setOption, onExecute }: OptionsAndExecuteProps) {
+export default function OptionsAndExecute({ option, setOption, onExecute, isExecuteDisabled }: OptionsAndExecuteProps) {
   return (
     <Card>
       <CardContent className="p-4">
@@ -21,12 +22,14 @@ export default function OptionsAndExecute({ option, setOption, onExecute }: Opti
                 <SelectValue placeholder="Selecione uma opção" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="option1">Autor</SelectItem>
-                <SelectItem value="option2">Réu</SelectItem>
+                <SelectItem value="autor">Autor</SelectItem>
+                <SelectItem value="reu">Réu</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <Button onClick={onExecute} className="w-full">Enviar</Button>
+          <Button onClick={onExecute} className="w-full" disabled={isExecuteDisabled}>
+            Executar
+          </Button>
         </div>
       </CardContent>
     </Card>
