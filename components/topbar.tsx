@@ -40,7 +40,7 @@ export function TopBar() {
           )}
         </nav>
         <nav className="hidden md:flex space-x-4 items-center">
-          {user && (
+          {user ? (
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -51,7 +51,7 @@ export function TopBar() {
                 <DropdownMenuContent align="end">
                   {/* <DropdownMenuItem onSelect={() => router.push('/profile')}>
                     <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
+                    <span>Perfil</span>
                   </DropdownMenuItem> */}
                   <DropdownMenuItem onSelect={handleSignOut}>
                     <LogOut className="mr-2 h-4 w-4" />
@@ -60,6 +60,10 @@ export function TopBar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </>
+          ) : (
+            <Button onClick={() => router.push('/auth')} variant="outline">
+              Entrar
+            </Button>
           )}
         </nav>
         <Button
@@ -81,7 +85,7 @@ export function TopBar() {
             className="md:hidden absolute top-full left-0 right-0 bg-background border-b"
           >
             <nav className="flex flex-col p-4 space-y-2">
-              {user && (
+              {user ? (
                 <>
                   <Link
                     href="/upload"
@@ -95,6 +99,10 @@ export function TopBar() {
                     <span>Sair</span>
                   </Button>
                 </>
+              ) : (
+                <Button onClick={() => router.push('/auth')} variant="outline">
+                  Entrar
+                </Button>
               )}
             </nav>
           </motion.div>

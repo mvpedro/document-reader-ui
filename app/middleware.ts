@@ -7,7 +7,10 @@ export async function middleware(req: NextRequest) {
   const supabase = createMiddlewareClient({ req, res })
   const { data: { session } } = await supabase.auth.getSession()
 
-  if (!session && req.nextUrl.pathname !== '/auth' && req.nextUrl.pathname !== '/') {
+  const publicRoutes = ['/', '/auth']
+  const isPublicRoute = publicRoutes.includes(req.nextUrl.pathname)
+
+  if (!session && !isPublicRoute) {
     const redirectUrl = req.nextUrl.clone()
     redirectUrl.pathname = '/auth'
     return NextResponse.redirect(redirectUrl)

@@ -35,7 +35,7 @@ export default function HomePage() {
       </div>
 
       <div className="text-center mt-12">
-        <Link href="/upload">
+        <Link href="/auth">
           <Button size="lg">Começar Agora</Button>
         </Link>
       </div>
