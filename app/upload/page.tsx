@@ -50,7 +50,10 @@ export default function FileUploadAndChat() {
       });
       const data = await response.json();
       setApiResult(data.text);
-      setHasApiResponse(true);  // Set this to true when we get a response
+      setHasApiResponse(true);
+
+      setEmbedId(data.embedId);
+
       setIsLoading(false);
     } catch (error) {
       console.error('Error:', error);

@@ -6,7 +6,8 @@ export async function POST(request: NextRequest) {
 
   // Mock response
   const mockResponse = {
-    text: "This is a mocked API response for local development. In production, this would be the result of processing the uploaded file."
+    text: "This is a mocked API response for local development. In production, this would be the result of processing the uploaded file.",
+    embedId: "mock-embed-id-123"
   };
 
   return NextResponse.json(mockResponse);
