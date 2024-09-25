@@ -9,7 +9,7 @@ export default function ApiResultCard({ apiResult }: ApiResultCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>API Result</CardTitle>
+        <CardTitle>Resultado</CardTitle>
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[200px] w-full rounded-md border p-4">

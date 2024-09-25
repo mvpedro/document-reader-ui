@@ -38,7 +38,7 @@ export default function FileUploadArea({ file, onFileUpload, onFileDelete }: Fil
             className="flex flex-col items-center justify-center h-40 cursor-pointer"
           >
             <Upload className="w-12 h-12 text-muted-foreground mb-2" />
-            <p className="text-muted-foreground">Drag and drop a file here or click to select</p>
+            <p className="text-muted-foreground">Arraste e solte um arquivo aqui ou clique para selecionar</p>
             <input
               type="file"
               ref={fileInputRef}

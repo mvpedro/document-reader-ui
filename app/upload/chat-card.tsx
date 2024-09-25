@@ -37,7 +37,7 @@ export default function ChatCard({ chatMessages, newMessage, setNewMessage, onSe
         </ScrollArea>
         <div className="flex space-x-2">
           <Input
-            placeholder="Type your message..."
+            placeholder="Escreva sua mensagem..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && onSendMessage()}

@@ -1,92 +1,63 @@
 "use client"
 
-import { useCallback, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { useToast } from "@/hooks/use-toast"
-import FileUploadArea from "./file-upload-area"
-import OptionsAndExecute from "./options-and-execute"
-import ApiResultCard from "./api-result-card"
-import ChatCard from "./chat-card"
+import { motion } from "framer-motion"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
 
-export default function FileUploadAndChat() {
-  const [file, setFile] = useState<File | null>(null)
-  const [option, setOption] = useState<string>("")
-  const [apiResult, setApiResult] = useState<string>("")
-  const [chatMessages, setChatMessages] = useState<string[]>([])
-  const [newMessage, setNewMessage] = useState<string>("")
-  const { toast } = useToast()
+export default function HomePage() {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1 className="text-4xl font-bold text-center mb-8">Bem-vindo ao AssistenteJurídico AI</h1>
+        <p className="text-xl text-center mb-12">
+          Sua ferramenta de inteligência artificial para otimizar o trabalho jurídico
+        </p>
+      </motion.div>
 
-  const handleFileUpload = useCallback((selectedFile: File) => {
-    toast({
-      title: "Uploading file...",
-      description: "Please wait while we process your file.",
-    })
-    setTimeout(() => {
-      setFile(selectedFile)
-      toast({
-        title: "File uploaded successfully",
-        description: `${selectedFile.name} has been uploaded.`,
-        variant: "default",
-      })
-    }, 2000)
-  }, [toast])
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <FeatureCard
+          title="Análise de Documentos"
+          description="Faça upload de documentos jurídicos para análise rápida e precisa."
+        />
+        {/* <FeatureCard
+          title="Pesquisa Jurídica"
+          description="Realize pesquisas jurídicas eficientes com a ajuda da IA."
+        />
+        <FeatureCard
+          title="Assistente de Redação"
+          description="Obtenha sugestões para aprimorar seus textos jurídicos."
+        /> */}
+      </div>
 
-  const handleFileDelete = useCallback(() => {
-    setFile(null)
-  }, [])
+      <div className="text-center mt-12">
+        <Link href="/upload">
+          <Button size="lg">Começar Agora</Button>
+        </Link>
+      </div>
+    </div>
+  )
+}
 
-  const handleExecute = () => {
-    setApiResult("Example API result with 20 lines of text.\n".repeat(20))
-  }
-
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      setChatMessages([...chatMessages, newMessage])
-      setNewMessage("")
-    }
-  }
-
+function FeatureCard({ title, description }: { title: string; description: string }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="flex p-4 flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0"
+      transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-        className="w-full md:w-2/3 space-y-4"
-      >
-        <FileUploadArea file={file} onFileUpload={handleFileUpload} onFileDelete={handleFileDelete} />
-        <AnimatePresence>
-          {file && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <OptionsAndExecute option={option} setOption={setOption} onExecute={handleExecute} />
-              <ApiResultCard apiResult={apiResult} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4, duration: 0.5 }}
-        className="w-full md:w-1/3"
-      >
-        <ChatCard
-          chatMessages={chatMessages}
-          newMessage={newMessage}
-          setNewMessage={setNewMessage}
-          onSendMessage={handleSendMessage}
-        />
-      </motion.div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>{description}</p>
+        </CardContent>
+      </Card>
     </motion.div>
   )
 }

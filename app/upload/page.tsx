@@ -35,8 +35,43 @@ export default function FileUploadAndChat() {
     setFile(null)
   }, [])
 
-  const handleExecute = () => {
-    setApiResult("Example API result with 20 lines of text.\n".repeat(20))
+  const handleExecute = async () => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      let response;
+      if (process.env.NODE_ENV === 'production') {
+        response = await fetch(
+          "https://flask-b-bd804e71c25f.herokuapp.com/api/upload",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+      } else {
+        response = await fetch("/api/mock-upload", {
+          method: "POST",
+          body: formData,
+        });
+      }
+
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+
+      const data = await response.json();
+      setApiResult(data.text);
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to process the file. Please try again.",
+        variant: "destructive",
+      });
+    }
   }
 
   const handleSendMessage = () => {
@@ -47,6 +82,7 @@ export default function FileUploadAndChat() {
   }
 
   return (
+
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}

@@ -15,19 +15,18 @@ export default function OptionsAndExecute({ option, setOption, onExecute }: Opti
       <CardContent className="p-4">
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="option">Choose an option</Label>
+            <Label htmlFor="option">Escolha uma opção</Label>
             <Select onValueChange={setOption} value={option}>
               <SelectTrigger id="option">
-                <SelectValue placeholder="Select an option" />
+                <SelectValue placeholder="Selecione uma opção" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="option1">Option 1</SelectItem>
-                <SelectItem value="option2">Option 2</SelectItem>
-                <SelectItem value="option3">Option 3</SelectItem>
+                <SelectItem value="option1">Autor</SelectItem>
+                <SelectItem value="option2">Réu</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <Button onClick={onExecute} className="w-full">Execute</Button>
+          <Button onClick={onExecute} className="w-full">Enviar</Button>
         </div>
       </CardContent>
     </Card>
