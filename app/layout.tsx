@@ -1,45 +1,44 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
+import DeployButton from "@/components/deploy-button";
+import { EnvVarWarning } from "@/components/env-var-warning";
+import HeaderAuth from "@/components/header-auth";
+import { hasEnvVars } from "@/utils/supabase/check-env-vars";
+import { GeistSans } from "geist/font/sans";
+import Link from "next/link";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster"
-import { TopBar } from "@/components/topbar";
-import { AuthProvider } from "@/contexts/AuthContext";
 
+const defaultUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
-
-export const metadata: Metadata = {
+export const metadata = {
+  metadataBase: new URL(defaultUrl),
   title: "Law Firm RAG",
-  description: "Law Firm RAG",
+  description: "Envie e analise seus documentos com a IA",
 };
-
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AuthProvider>
-          <TopBar />
-          {children}
-          <Toaster />
-        </AuthProvider>
+    <html lang="en" className={GeistSans.className} suppressHydrationWarning>
+      <body className="bg-background text-foreground">
+        <main className="min-h-screen flex flex-col items-center">
+          <div className="flex-1 w-full flex flex-col gap-20 items-center">
+            <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
+              <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
+                <div className="flex gap-5 items-center font-semibold">
+                  <Link href={"/"}>Nome da Firma</Link>
+                </div>
+              </div>
+            </nav>
+            <div className="flex flex-col max-w-5xl">
+              {children}
+            </div>
+          </div>
+        </main>
       </body>
     </html>
   );
-
 }
