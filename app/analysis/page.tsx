@@ -95,9 +95,9 @@ export default function FileUploadAndChat() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="space-y-8">
+    <div className="w-full px-4 py-8">
+      <div className="flex flex-col lg:flex-row gap-8 w-full mx-auto">
+        <div className="w-full lg:w-1/3 space-y-8">
           <FileUploadArea file={file} onFileUpload={handleFileUpload} onFileDelete={handleFileDelete} />
           <OptionsAndExecute
             option={option}
@@ -105,15 +105,17 @@ export default function FileUploadAndChat() {
             onExecute={handleExecute}
             isExecuteDisabled={!file || !option}
           />
-          <ApiResultCard apiResult={apiResult} />
         </div>
-        <ChatCard
-          chatMessages={chatMessages}
-          newMessage={newMessage}
-          setNewMessage={setNewMessage}
-          onSendMessage={handleSendMessage}
-          isDisabled={!embedId}
-        />
+        <div className="w-full lg:w-2/3 space-y-8">
+          <ApiResultCard apiResult={apiResult} />
+          <ChatCard
+            chatMessages={chatMessages}
+            newMessage={newMessage}
+            setNewMessage={setNewMessage}
+            onSendMessage={handleSendMessage}
+            isDisabled={!embedId}
+          />
+        </div>
       </div>
     </div>
   )
