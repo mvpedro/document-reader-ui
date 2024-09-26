@@ -37,7 +37,7 @@ export default function RootLayout({
                 </form>
               </div>
             </nav>
-            <div className="w-full py-10">
+            <div className="w-full py-5">
               {children}
             </div>
           </div>
