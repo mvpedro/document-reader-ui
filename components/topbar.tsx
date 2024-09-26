@@ -30,11 +30,8 @@ export function TopBar() {
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link href="/" className="font-bold text-xl text-primary">AssistenteJurídico AI</Link>
         <nav className="hidden md:flex space-x-4 items-center">
-          <Link href="/" className="text-foreground hover:text-primary transition-colors">
-            Início
-          </Link>
           {user && (
-            <Link href="/upload" className="text-foreground hover:text-primary transition-colors">
+            <Link href="/analysis" className="text-foreground hover:text-primary transition-colors">
               Upload e Análise
             </Link>
           )}
@@ -49,10 +46,6 @@ export function TopBar() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  {/* <DropdownMenuItem onSelect={() => router.push('/profile')}>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Perfil</span>
-                  </DropdownMenuItem> */}
                   <DropdownMenuItem onSelect={handleSignOut}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Sair</span>
@@ -75,39 +68,6 @@ export function TopBar() {
           <Menu className="h-6 w-6" />
         </Button>
       </div>
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden absolute top-full left-0 right-0 bg-background border-b"
-          >
-            <nav className="flex flex-col p-4 space-y-2">
-              {user ? (
-                <>
-                  <Link
-                    href="/upload"
-                    className="text-foreground hover:text-primary transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Upload e Análise
-                  </Link>
-                  <Button variant="ghost" onClick={handleSignOut}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Sair</span>
-                  </Button>
-                </>
-              ) : (
-                <Button onClick={() => router.push('/auth')} variant="outline">
-                  Entrar
-                </Button>
-              )}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </header>
   )
 }

@@ -22,7 +22,7 @@ export default function AuthPage() {
       } else {
         await signUp(email, password)
       }
-      router.push('/upload')
+      router.push('/analysis')
     } catch (error) {
       console.error('Authentication error:', error)
     }
